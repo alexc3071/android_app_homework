@@ -318,6 +318,9 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         for(int i = 0; i < my_data.data.size(); i++){
             review_data.data.add(my_data.data.get(i));
         }
+        if(review_data.data.size() == 0){
+            findViewById(R.id.review_word).setVisibility(View.GONE);
+        }
         Log.d("review_data size", String.valueOf(review_data.data.size()));
         rv_adapter.notifyDataSetChanged();
 

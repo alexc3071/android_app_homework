@@ -1,6 +1,7 @@
 package com.example.homework9.ui.home;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,12 +42,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     //Variables
     public int cur_tab;
 
+    //Data for home fragment
+    HomeData home_data=null;
+
     //Slider variables
 
     //Card variables
     private RecyclerView popular_card_box;
+    private RecyclerView top_card_box;
     private CardListAdapter popular_adapter;
-    private CardData cardListData;
+    private CardListAdapter top_adapter;
+    private CardData popCardListData;
+    private CardData topCardListData;
 
 
     //Data type for home screen data
@@ -76,29 +83,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.movie_tab_button).setOnClickListener(this);
         view.findViewById(R.id.tv_tab_button).setOnClickListener(this);
 
+        //Set listener for the TMDB line in the footer
+        view.findViewById(R.id.powered_by).setOnClickListener(this);
+
         //Set current tab
         cur_tab = 0;
 
-        // Initialize data
-        cardListData = new CardData();
-        cardListData.data = new ArrayList<Map<String, String>>();
-
-        //Set recycler view adapter and manager for popular items
-        // Lookup the recyclerview in activity layout
-        popular_card_box = (RecyclerView) view.findViewById(R.id.popular_recycler);
-        popular_card_box.setNestedScrollingEnabled(true);
-
-        // Create adapter passing in the empty data object
-        popular_adapter = new CardListAdapter(cardListData.data, getContext(), new CardListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Map<String, String> item) {
-                switchDetails(item);
-            }
-        });
-        // Attach the adapter to the recyclerview to populate items
-        popular_card_box.setAdapter(popular_adapter);
-        // Set layout manager to position the items
-        popular_card_box.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        //Initialize card recycler views and associated items
+        init_card_recyclers(view);
 
         //Get Data
         setHomeFragment();
@@ -113,9 +105,65 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.tv_tab_button:
                 toggleTV(view);
                 break;
+            case R.id.powered_by:
+                openTMDB();
+                break;
+
             default:
                 break;
         }
+    }
+
+    public void openTMDB(){
+
+        String tmdb_url = "https://www.themoviedb.org/";
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(tmdb_url));
+        getContext().startActivity(browserIntent);
+    }
+
+    public void init_card_recyclers(View view){
+        // Initialize data
+        popCardListData = new CardData();
+        popCardListData.data = new ArrayList<Map<String, String>>();
+
+        //Set recycler view adapter and manager for popular items
+        // Lookup the recyclerview in activity layout
+        popular_card_box = (RecyclerView) view.findViewById(R.id.popular_recycler);
+        popular_card_box.setNestedScrollingEnabled(true);
+
+        // Create adapter passing in the empty data object
+        popular_adapter = new CardListAdapter(popCardListData.data, getContext(), new CardListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Map<String, String> item) {
+                switchDetails(item);
+            }
+        });
+        // Attach the adapter to the recyclerview to populate items
+        popular_card_box.setAdapter(popular_adapter);
+        // Set layout manager to position the items
+        popular_card_box.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+
+        // Initialize data for top items
+        topCardListData = new CardData();
+        topCardListData.data = new ArrayList<Map<String, String>>();
+
+        //Set recycler view adapter and manager for top items
+        // Lookup the recyclerview in activity layout
+        top_card_box = (RecyclerView) view.findViewById(R.id.top_recycler);
+        top_card_box.setNestedScrollingEnabled(true);
+
+        // Create adapter passing in the empty data object
+        top_adapter = new CardListAdapter(topCardListData.data, getContext(), new CardListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Map<String, String> item) {
+                switchDetails(item);
+            }
+        });
+        // Attach the adapter to the recyclerview to populate items
+        top_card_box.setAdapter(top_adapter);
+        // Set layout manager to position the items
+        top_card_box.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     }
 
     // A method to switch to the details activity
@@ -127,7 +175,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         dIntent.putExtra("id", id);
         startActivity(dIntent);
     }
-
 
     // A method to switch to the details activity
     public void switchDetails(){
@@ -147,7 +194,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             t_button.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
             cur_tab = 0;
 
-            getView().findViewById(R.id.movie_tab_content).setVisibility(View.VISIBLE);
+            Map<String, String>[] movie_popular= home_data.data.get("movie_popular");
+            Map<String, String>[] movie_top= home_data.data.get("movie_top");
+
+            setUpTopGroup(movie_top);
+            setUpPopularGroup(movie_popular);
+            //getView().findViewById(R.id.movie_tab_content).setVisibility(View.VISIBLE);
         }
 
     }
@@ -158,8 +210,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             t_button.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
             m_button.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
             cur_tab = 1;
-            getView().findViewById(R.id.movie_tab_content).setVisibility(View.GONE);
-            switchDetails();
+
+            Map<String, String>[] tv_popular= home_data.data.get("tv_popular");
+            Map<String, String>[] tv_top = home_data.data.get("tv_top");
+            setUpTopGroup(tv_top);
+            setUpPopularGroup(tv_popular);
+            //getView().findViewById(R.id.movie_tab_content).setVisibility(View.GONE);
         }
     }
 
@@ -173,19 +229,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     protected void setUpPopularGroup(Map<String, String>[] popular_arr){
-
+        popCardListData.data.clear();
         for(int i = 0; i < popular_arr.length; i++){
-            cardListData.data.add(popular_arr[i]);
+            popCardListData.data.add(popular_arr[i]);
         }
         popular_adapter.notifyDataSetChanged();
     }
 
-    protected void setUpTopGroup(Map<String, String>[] popular_arr){
-
-        for(int i = 0; i < popular_arr.length; i++){
-            cardListData.data.add(popular_arr[i]);
+    protected void setUpTopGroup(Map<String, String>[] top_arr){
+        topCardListData.data.clear();
+        for(int i = 0; i < top_arr.length; i++){
+            topCardListData.data.add(top_arr[i]);
         }
-        popular_adapter.notifyDataSetChanged();
+        top_adapter.notifyDataSetChanged();
     }
 
     protected void setUpSlider(Map<String, String>[] item_arr){
@@ -227,7 +283,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         //Parse response
         Gson gson = new Gson();
-        HomeData home_data=null;
         try{
             home_data = gson.fromJson(response, HomeData.class);
         } catch (Exception error){
@@ -244,6 +299,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         setUpSlider(movie_playing);
         setUpPopularGroup(movie_popular);
+        setUpTopGroup(movie_top);
 
         //Hide the progress bar when ready to show content
         getView().findViewById(R.id.loading_screen).setVisibility(View.GONE);

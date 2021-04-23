@@ -15,7 +15,7 @@ import java.util.List;
 public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapterViewHolder> {
 
     // list for storing urls of images.
-    private final List<SliderData> mSliderItems;
+    private final ArrayList<SliderData> mSliderItems;
 
     // Constructor
     public SliderAdapter(Context context, ArrayList<SliderData> sliderDataArrayList) {

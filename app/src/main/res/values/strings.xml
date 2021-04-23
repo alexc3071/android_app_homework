@@ -20,6 +20,8 @@
     <string name="share_facebook">Share on Facebook</string>
     <string name="share_twitter">Share on Twitter</string>
     <string name="add_watchlist">Add to Watchlist</string>
+    <string name="powered_by">Powered by TMDB</string>
+    <string name="developed_by">Developed by Alex</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
