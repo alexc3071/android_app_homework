@@ -144,9 +144,6 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
                             default:
                                 break;
                         }
-                        // Toast message on menu item clicked
-
-                        Toast.makeText(app_context, "You Clicked " + menuItem.getTitle(), Toast.LENGTH_SHORT).show();
                         return true;
                     }
                 });

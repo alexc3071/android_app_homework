@@ -1,25 +1,45 @@
 package com.example.homework9;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 
 import com.bumptech.glide.Glide;
+import com.example.homework9.ui.home.BlurTransformation;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapterViewHolder> {
 
     // list for storing urls of images.
-    private final ArrayList<SliderData> mSliderItems;
+    private ArrayList<Map<String, String>> mSliderItems;
+    private Context app_context;
+    private final SliderAdapter.OnItemClickListener listener;
+
+    //Interface for onclick listener
+    public interface OnItemClickListener{
+        void onItemClick(Map<String, String> item);
+    }
 
     // Constructor
-    public SliderAdapter(Context context, ArrayList<SliderData> sliderDataArrayList) {
+    public SliderAdapter(Context context, ArrayList<Map<String, String>> sliderDataArrayList, SliderAdapter.OnItemClickListener onClickListener) {
         this.mSliderItems = sliderDataArrayList;
+        this.app_context = context;
+        listener = onClickListener;
+    }
+
+    // Update slider
+    public void updateItems(ArrayList<Map<String, String>> sliderItems) {
+        this.mSliderItems = sliderItems;
+        notifyDataSetChanged();
     }
 
     // We are inflating the slider_layout
@@ -35,14 +55,27 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
     @Override
     public void onBindViewHolder(SliderAdapterViewHolder viewHolder, final int position) {
 
-        final SliderData sliderItem = mSliderItems.get(position);
+        final Map<String, String> sliderItem = mSliderItems.get(position);
 
         // Glide is use to load image
         // from url in your imageview.
         Glide.with(viewHolder.itemView)
-                .load(sliderItem.getImgUrl())
+                .load(sliderItem.get("poster_path"))
                 .fitCenter()
-                .into(viewHolder.imageViewBackground);
+                .into(viewHolder.mainImageView);
+
+        // Set blurred image
+        Glide.with(viewHolder.itemView)
+                .load(sliderItem.get("poster_path"))
+                .fitCenter()
+                .transform(new BlurTransformation(app_context))
+                .into(viewHolder.blurredImageView);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override public void onClick(View v) {
+                listener.onItemClick(sliderItem);
+            }
+        });
     }
 
     // this method will return
@@ -56,11 +89,13 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
         // Adapter class for initializing
         // the views of our slider view.
         View itemView;
-        ImageView imageViewBackground;
+        ImageView mainImageView;
+        ImageView blurredImageView;
 
         public SliderAdapterViewHolder(View itemView) {
             super(itemView);
-            imageViewBackground = itemView.findViewById(R.id.myimage);
+            mainImageView= itemView.findViewById(R.id.myimage);
+            blurredImageView=itemView.findViewById(R.id.blurred_image);
             this.itemView = itemView;
         }
     }

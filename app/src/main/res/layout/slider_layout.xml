@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="420dp"
+    android:layout_height="match_parent"
+    android:layout_marginHorizontal="10dp">
+    <ImageView
+        android:id="@+id/blurred_image"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/app_name" />
     <ImageView
         android:id="@+id/myimage"
         android:layout_width="400dp"

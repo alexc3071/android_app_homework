@@ -25,14 +25,11 @@ import com.android.volley.toolbox.Volley;
 import com.example.homework9.CardListAdapter;
 import com.example.homework9.DetailsActivity;
 import com.example.homework9.R;
-import com.example.homework9.ReviewAdapter;
 import com.example.homework9.SliderAdapter;
-import com.example.homework9.SliderData;
 import com.google.gson.Gson;
 import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
@@ -46,6 +43,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     HomeData home_data=null;
 
     //Slider variables
+    SliderAdapter s_adapter;
 
     //Card variables
     private RecyclerView popular_card_box;
@@ -194,11 +192,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             t_button.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
             cur_tab = 0;
 
+            Map<String, String>[] movie_playing= home_data.data.get("movie_playing");
             Map<String, String>[] movie_popular= home_data.data.get("movie_popular");
             Map<String, String>[] movie_top= home_data.data.get("movie_top");
 
             setUpTopGroup(movie_top);
             setUpPopularGroup(movie_popular);
+            update_slider(movie_playing);
             //getView().findViewById(R.id.movie_tab_content).setVisibility(View.VISIBLE);
         }
 
@@ -211,10 +211,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             m_button.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
             cur_tab = 1;
 
+            Map<String, String>[] tv_trending = home_data.data.get("tv_trending");
             Map<String, String>[] tv_popular= home_data.data.get("tv_popular");
             Map<String, String>[] tv_top = home_data.data.get("tv_top");
             setUpTopGroup(tv_top);
             setUpPopularGroup(tv_popular);
+            update_slider(tv_trending);
             //getView().findViewById(R.id.movie_tab_content).setVisibility(View.GONE);
         }
     }
@@ -244,9 +246,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         top_adapter.notifyDataSetChanged();
     }
 
+    protected void update_slider(Map<String, String>[] item_arr){
+        ArrayList<Map<String, String>> sliderDataArrayList = new ArrayList<Map<String, String>>();
+        // adding the items to the arraylist
+        for(int i = 0; i < item_arr.length; i++){
+            sliderDataArrayList.add(item_arr[i]);
+        }
+        s_adapter.updateItems(sliderDataArrayList);
+    }
+
     protected void setUpSlider(Map<String, String>[] item_arr){
         // we are creating array list for storing our image urls.
-        ArrayList<SliderData> sliderDataArrayList = new ArrayList<>();
+        ArrayList<Map<String, String>> sliderDataArrayList = new ArrayList<Map<String, String>>();
 
         // initializing the slider view.
         SliderView sliderView = getView().findViewById(R.id.slider);
@@ -254,10 +265,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         // adding the urls inside array list
         for(int i = 0; i < item_arr.length; i++){
-            sliderDataArrayList.add(new SliderData(item_arr[i].get("poster_path")));
+            sliderDataArrayList.add(item_arr[i]);
         }
         // passing this array list inside our adapter class.
-        SliderAdapter adapter = new SliderAdapter(getContext(), sliderDataArrayList);
+        s_adapter = new SliderAdapter(getContext(), sliderDataArrayList, new SliderAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Map<String, String> item) {
+                switchDetails(item);
+            }
+        });
 
         // below method is used to set auto cycle direction in left to
         // right direction you can change according to requirement.
@@ -265,7 +281,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         // below method is used to
         // setadapter to sliderview.
-        sliderView.setSliderAdapter(adapter);
+        sliderView.setSliderAdapter(s_adapter);
 
         // below method is use to set
         // scroll time in seconds.
