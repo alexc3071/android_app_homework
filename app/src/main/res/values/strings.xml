@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">USC Films</string>
+    <string name="title_home">Home</string>
+    <string name="title_search">Search</string>
+    <string name="title_watchlist">Watchlist</string>
+    <string name="t_icon_description">Theater Icon</string>
+    <string name="usc_string">USC Films</string>
+    <string name="movie_tab_text">Movies</string>
+    <string name="tv_tab_text">TV Shows</string>
+    <string name="loading_text">Loading...</string>
+    <string name="top_rated_string">Top-Rated</string>
+    <string name="popular_string">Popular</string>
+    <string name="title_activity_details">DetailsActivity</string>
+    <string name="overview_word">Overview</string>
+    <string name="genres_word">Genres</string>
+    <string name="year_word">Year</string>
+    <string name="cast_word">Cast</string>
+    <string name="review_word">Reviews</string>
+    <string name="open_tmdb">Open in TMDB</string>
+    <string name="share_facebook">Share on Facebook</string>
+    <string name="share_twitter">Share on Twitter</string>
+    <string name="add_watchlist">Add to Watchlist</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+</resources>

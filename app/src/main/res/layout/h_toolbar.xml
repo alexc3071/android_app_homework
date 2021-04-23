@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:gravity="center_vertical"
+    android:background="@color/backgroundColor"
+    >
+
+    <ImageView
+        android:id="@+id/nav_t_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="@string/t_icon_description"
+        android:src="@drawable/ic_theaters_white_18dp" />
+    <TextView
+        android:id="@+id/home_title"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:layout_toRightOf="@id/nav_t_icon"
+        android:text="@string/usc_string" />
+
+
+    <TextView
+        android:id="@+id/tv_tab_button"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="14sp"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="2dp"
+        android:textColor="@color/colorPrimary"
+        android:layout_alignParentRight="true"
+        android:text="@string/tv_tab_text" />
+
+    <TextView
+        android:id="@+id/movie_tab_button"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="14sp"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="2dp"
+        android:textColor="@color/white"
+        android:text="@string/movie_tab_text"
+        android:layout_toLeftOf="@id/tv_tab_button"
+        android:layout_marginRight="10dp"
+        />
+
+
+</RelativeLayout>
