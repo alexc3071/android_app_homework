@@ -109,7 +109,6 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
         // Get element from your dataset at this position and set the views
-        Log.d("poster_path", localDataSet.get(position).get("poster_path"));
         Glide.with(app_context).load(localDataSet.get(position).get("poster_path")).into(viewHolder.getPoster());
 
 
@@ -164,7 +163,6 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
     public void postTwitter(String tmdb_url){
         String my_url = "https://twitter.com/intent/tweet?text=" + Uri.encode("Check this out!") + " %0D%0A";
         my_url += Uri.encode(tmdb_url);
-        Log.d("what", my_url);
 
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(my_url));
         app_context.startActivity(browserIntent);
@@ -172,7 +170,6 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
     public void postFacebook(String tmdb_url){
         String my_str = "https://www.facebook.com/sharer/sharer.php?u=";
         my_str += Uri.encode(tmdb_url);
-        Log.d("what", my_str);
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(my_str));
         app_context.startActivity(browserIntent);
     }

@@ -24,4 +24,15 @@
     </style>
 
 
-    </resources>
+    <style name="searchStyle" parent="Widget.AppCompat.Light.SearchView">
+                <item name="android:textColorHint">@color/colorLight</item>
+                <item name="android:textColorPrimary">@color/white</item>
+                <item name="android:textColorSecondary">@color/colorLight</item>
+                <item name="android:tint">@color/white</item>
+
+    </style>
+
+
+
+
+</resources>

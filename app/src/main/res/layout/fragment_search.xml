@@ -1,33 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.search.SearchFragment" >
+    android:orientation="vertical"
+    tools:context=".ui.search.SearchFragment">
 
-    <RelativeLayout
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/backgroundColor">
+
+        <RelativeLayout
+            android:id="@+id/not"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:theme="@style/searchStyle" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_recycler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="56dp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/s_no_result"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@color/noResultColor"
+        android:visibility="gone">
 
-        <include
-            android:id="@+id/home_toolbar"
-            layout="@layout/h_toolbar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/movie_tab_content"
-            layout="@layout/movie_tab"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_below="@+id/home_toolbar"
-            />
-    </RelativeLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="180dp"
+            android:text="@string/no_result"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="14sp" />
+    </FrameLayout>
+
+</LinearLayout>

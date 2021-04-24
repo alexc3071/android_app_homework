@@ -325,7 +325,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         RequestQueue queue = Volley.newRequestQueue(getContext());
         String url ="http://10.0.2.2:8080/homecontent";
 
-// Request a string response from the provided URL.
+    // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
