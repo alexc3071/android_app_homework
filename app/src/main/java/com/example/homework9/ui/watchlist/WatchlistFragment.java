@@ -1,5 +1,6 @@
 package com.example.homework9.ui.watchlist;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +24,7 @@ import com.example.homework9.ui.search.SearchAdapter;
 import com.example.homework9.ui.search.SearchFragment;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 public class WatchlistFragment extends Fragment {
@@ -29,6 +32,7 @@ public class WatchlistFragment extends Fragment {
     private WatchlistViewModel watchlistViewModel;
     private WatchData watch_data;
     private WatchHolder watch_holder;
+    private ItemTouchHelper itemTouchHelper;
 
     //Recycler variables
     private RecyclerView watch_box;
@@ -56,6 +60,26 @@ public class WatchlistFragment extends Fragment {
         //Initialize watchlist content
         init_watch_content();
     }
+
+    //Set up simple callback
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP |
+            ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT | ItemTouchHelper.START | ItemTouchHelper.END, 0) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+            w_adapter.moveItems(fromPosition, toPosition);
+            recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
+
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+    };
 
     private void init_recyclers(View view){
         // Initialize data
@@ -89,6 +113,10 @@ public class WatchlistFragment extends Fragment {
         watch_box.setAdapter(w_adapter);
         // Set layout manager to position the items
         watch_box.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+        // Set up item touch helper for drag and drop feature
+        itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(watch_box);
     }
 
     // A method to switch to the details activity

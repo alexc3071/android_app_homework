@@ -2,6 +2,7 @@ package com.example.homework9.ui.watchlist;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.example.homework9.R;
 import com.example.homework9.WatchHolder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 
@@ -35,6 +37,18 @@ public class WatchCardAdapter extends RecyclerView.Adapter<WatchCardAdapter.View
     //Interface for onclick listener2
     public interface OnNumClickListener {
         void onItemClick(int num);
+    }
+
+    // Update watchlist stored in shared preferences
+    public void updatePreferences(){
+        watch_holder.saveUpdatedList(localDataSet);
+    }
+
+    //A method to swap items for the drag and drop functionality
+    public void moveItems(int position1, int position2){
+        Map<String, String> item = localDataSet.remove(position1);
+        localDataSet.add(position2, item);
+        updatePreferences();
     }
 
     // Update slider

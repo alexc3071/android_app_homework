@@ -52,6 +52,14 @@ public class WatchHolder {
         }
     }
 
+    public void saveUpdatedList(ArrayList<Map<String, String>> data_list){
+        ArrayList<String> stringified_data = new ArrayList<String>();
+        for(int i = 0; i < data_list.size(); i++){
+            stringified_data.add(getWatchKey(data_list.get(i)));
+        }
+        setShared(stringified_data);
+    }
+
     public void toggleWatchList(Map<String, String> item){
         String item_key = getWatchKey(item);
         ArrayList<String> cur_watchlist = getShared();
@@ -106,7 +114,6 @@ public class WatchHolder {
         for(int i = 0; i < cur_str_watchlist.size(); i++){
             String[] split_item = cur_str_watchlist.get(i).split(FIELD_DELIMITER);
             Map<String, String> item = new HashMap<String, String>();
-            Log.d("what", cur_str_watchlist.get(i));
             item.put(map_keys[0], split_item[0]);
             item.put(map_keys[1], split_item[1]);
             item.put(map_keys[2], split_item[2]);
