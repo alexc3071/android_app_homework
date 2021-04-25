@@ -18,7 +18,7 @@
 
         <ImageView
             android:id="@+id/s_backdrop"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_theaters_white_18dp"

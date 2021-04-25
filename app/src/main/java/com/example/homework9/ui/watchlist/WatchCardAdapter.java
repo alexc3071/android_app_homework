@@ -23,23 +23,35 @@ public class WatchCardAdapter extends RecyclerView.Adapter<WatchCardAdapter.View
     //Adapter variables
     private ArrayList<Map<String, String>> localDataSet;
     private Context app_context;
-    private final OnItemClickListener listener;
+    private final OnItemClickListener listener_item;
+    private final OnNumClickListener listener_num;
     private WatchHolder watch_holder;
 
-    //Interface for onclick listener
+    //Interface for onclick listener1
     public interface OnItemClickListener {
         void onItemClick(Map<String, String> item);
+    }
+
+    //Interface for onclick listener2
+    public interface OnNumClickListener {
+        void onItemClick(int num);
     }
 
     // Update slider
     public void updateItems(ArrayList<Map<String, String>> watchItems) {
         this.localDataSet = watchItems;
+        listener_num.onItemClick(localDataSet.size());
         notifyDataSetChanged();
     }
 
     // Update slider
     public void updateItems() {
+        listener_num.onItemClick(localDataSet.size());
         notifyDataSetChanged();
+    }
+
+    public int getNumItems(){
+        return this.localDataSet.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -74,9 +86,10 @@ public class WatchCardAdapter extends RecyclerView.Adapter<WatchCardAdapter.View
         }
     }
 
-    public WatchCardAdapter(ArrayList<Map<String, String>> dataSet, Context a_context, OnItemClickListener onClickListener) {
+    public WatchCardAdapter(ArrayList<Map<String, String>> dataSet, Context a_context, OnItemClickListener onItemClickListener, OnNumClickListener onNumClickListener) {
         localDataSet = dataSet;
-        listener = onClickListener;
+        listener_item = onItemClickListener;
+        listener_num = onNumClickListener;
         app_context = a_context;
         watch_holder = new WatchHolder(app_context);
     }
@@ -109,7 +122,7 @@ public class WatchCardAdapter extends RecyclerView.Adapter<WatchCardAdapter.View
         viewHolder.getGradient().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClick(localDataSet.get(position));
+                listener_item.onItemClick(localDataSet.get(position));
             }
         });
 
@@ -120,13 +133,13 @@ public class WatchCardAdapter extends RecyclerView.Adapter<WatchCardAdapter.View
                 //Remove item from watchlist in shared preferences
                 String watch_key = watch_holder.getWatchKey(localDataSet.get(position));
                 watch_holder.toggleWatchList(watch_key);
-                // Remove item from data arraylist in adapter
-                localDataSet.remove(position);
-                updateItems();
 
                 //Display toast
                 String watch_toast = localDataSet.get(position).get("title") +  " was removed from favorites";
                 Toast.makeText(app_context, watch_toast, Toast.LENGTH_LONG).show();
+                localDataSet.remove(position);
+                // Remove item from data arraylist in adapter
+                updateItems();
             }
         });
 

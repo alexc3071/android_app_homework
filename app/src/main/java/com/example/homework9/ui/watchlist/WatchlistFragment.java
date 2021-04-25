@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -72,11 +73,22 @@ public class WatchlistFragment extends Fragment {
             public void onItemClick(Map<String, String> item) {
                 switchDetails(item);
             }
-        });
+        },
+                new WatchCardAdapter.OnNumClickListener() {
+                    @Override
+                    public void onItemClick(int num) {
+                        if(num == 0){
+                            view.findViewById(R.id.w_empty_message).setVisibility(View.VISIBLE);
+                        }
+                        else{
+                            view.findViewById(R.id.w_empty_message).setVisibility(View.GONE);
+                        }
+                    }
+                } );
         // Attach the adapter to the recyclerview to populate items
         watch_box.setAdapter(w_adapter);
         // Set layout manager to position the items
-        watch_box.setLayoutManager(new LinearLayoutManager(getContext()));
+        watch_box.setLayoutManager(new GridLayoutManager(getContext(), 3));
     }
 
     // A method to switch to the details activity
