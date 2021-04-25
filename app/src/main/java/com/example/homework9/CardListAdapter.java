@@ -48,6 +48,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
     private ArrayList<Map<String, String>> localDataSet;
     private Context app_context;
     private final OnItemClickListener listener;
+    private final WatchHolder watch_holder;
 
     //Interface for onclick listener
     public interface OnItemClickListener{
@@ -92,6 +93,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
         localDataSet = dataSet;
         listener = onClickListener;
         app_context = a_context;
+        watch_holder = new WatchHolder(a_context);
     }
 
     // Create new views (invoked by the layout manager)
@@ -119,6 +121,9 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
             }
         });
 
+        //Create watchkey string
+        String watch_key = localDataSet.get(position).get("media_type") + "_" + localDataSet.get(position).get("id") + "_" + localDataSet.get(position).get("poster_path");
+
         viewHolder.getMIcon().setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
                 // Initializing the popup menu and giving the reference as current context
@@ -126,6 +131,16 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
 
                 // Inflating popup menu from popup_menu.xml file
                 popupMenu.getMenuInflater().inflate(R.menu.card_menu, popupMenu.getMenu());
+                Boolean isInWatch = watch_holder.isInWatchList(watch_key);
+                final String watch_toast;
+                if(isInWatch){
+                    popupMenu.getMenu().findItem(R.id.add_watchlist).setTitle("Remove from Watchlist");
+                    watch_toast = localDataSet.get(position).get("title") +  " was removed from Watchlist";
+                }
+                else{
+                    popupMenu.getMenu().findItem(R.id.add_watchlist).setTitle("Add to Watchlist");
+                    watch_toast = localDataSet.get(position).get("title") + " was added to Watchlist";
+                }
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
@@ -139,6 +154,11 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
                                 break;
                             case R.id.share_facebook:
                                 postFacebook(localDataSet.get(position).get("tmdb_url"));
+                                break;
+                            case R.id.add_watchlist:
+                                watch_holder.toggleWatchList(watch_key);
+                                Toast.makeText(app_context, watch_toast,
+                                        Toast.LENGTH_LONG).show();
                                 break;
                             default:
                                 break;

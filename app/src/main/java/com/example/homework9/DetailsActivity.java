@@ -42,10 +42,13 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
 
     String media_type;
     String s_id;
+    String poster_path;
     DetailsData details_data=null;
     CastData cast_data=null;
     ReviewData review_data=null;
     ReviewAdapter rv_adapter= null;
+    WatchHolder watch_holder=null;
+    String watch_key = null;
     int watch_state;
 
     @Override
@@ -64,6 +67,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         //Get the media_type and id passed in
         media_type = getIntent().getStringExtra("media_type");
         s_id = getIntent().getStringExtra("id");
+        poster_path = getIntent().getStringExtra("poster_path");
 
         //Set lifecycle observer for youtube video
         /**
@@ -77,6 +81,9 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
          **/
+
+        //Set up Watch Holder object to access watchlist in shared preferences
+        watch_holder = new WatchHolder(DetailsActivity.this);
 
         //Set recycler view adapter and manager
         // Lookup the recyclerview in activity layout
@@ -98,10 +105,13 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         // Set layout manager to position the items
         review_box.setLayoutManager(new LinearLayoutManager(this));
 
+        //Initialize watchlist button
+        initWatchButton();
+
         //Set the content for the layout
         initializeDetails();
-        watch_state = 0;
     }
+
 
     // A method to switch to the details activity
     public void switchReview(Map<String, String> item){
@@ -121,6 +131,21 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         startActivity(dIntent);
     }
 
+    // A method to initialize the watchlist button and watch state
+    public void initWatchButton(){
+        watch_key = media_type + "_" + s_id + "_" + poster_path;
+        Boolean isInWatch = watch_holder.isInWatchList(watch_key);
+        if(isInWatch){
+            ImageView watch_button = (ImageView) findViewById(R.id.watch_button);
+            watch_button.setImageResource(R.drawable.ic_baseline_remove_circle_outline_24);
+            watch_state = 1;
+        }
+        else{
+            ImageView watch_button = (ImageView) findViewById(R.id.watch_button);
+            watch_button.setImageResource(R.drawable.ic_baseline_add_circle_outline_24);
+            watch_state = 0;
+        }
+    }
 
     // Methods for watchlist control
     public void toggleWatch(View view){
@@ -129,12 +154,14 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
             i_view.setImageResource(R.drawable.ic_baseline_remove_circle_outline_24);
             Toast.makeText(DetailsActivity.this, details_data.title + " was added to Watchlist",
                     Toast.LENGTH_LONG).show();
+            watch_holder.toggleWatchList(watch_key);
             watch_state = 1;
         }
         else{
             i_view.setImageResource(R.drawable.ic_baseline_add_circle_outline_24);
             Toast.makeText(DetailsActivity.this, details_data.title + " was removed from Watchlist",
                     Toast.LENGTH_LONG).show();
+            watch_holder.toggleWatchList(watch_key);
             watch_state = 0;
         }
     }
