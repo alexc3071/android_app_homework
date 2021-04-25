@@ -43,6 +43,8 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     String media_type;
     String s_id;
     String poster_path;
+    String title;
+    Map<String, String> my_item;
     DetailsData details_data=null;
     CastData cast_data=null;
     ReviewData review_data=null;
@@ -68,6 +70,8 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         media_type = getIntent().getStringExtra("media_type");
         s_id = getIntent().getStringExtra("id");
         poster_path = getIntent().getStringExtra("poster_path");
+        title = getIntent().getStringExtra("title");
+
 
         //Set lifecycle observer for youtube video
         /**

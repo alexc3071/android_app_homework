@@ -121,9 +121,6 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
             }
         });
 
-        //Create watchkey string
-        String watch_key = localDataSet.get(position).get("media_type") + "_" + localDataSet.get(position).get("id") + "_" + localDataSet.get(position).get("poster_path");
-
         viewHolder.getMIcon().setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
                 // Initializing the popup menu and giving the reference as current context
@@ -131,7 +128,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
 
                 // Inflating popup menu from popup_menu.xml file
                 popupMenu.getMenuInflater().inflate(R.menu.card_menu, popupMenu.getMenu());
-                Boolean isInWatch = watch_holder.isInWatchList(watch_key);
+                Boolean isInWatch = watch_holder.isInWatchList(localDataSet.get(position));
                 final String watch_toast;
                 if(isInWatch){
                     popupMenu.getMenu().findItem(R.id.add_watchlist).setTitle("Remove from Watchlist");
@@ -156,7 +153,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHo
                                 postFacebook(localDataSet.get(position).get("tmdb_url"));
                                 break;
                             case R.id.add_watchlist:
-                                watch_holder.toggleWatchList(watch_key);
+                                watch_holder.toggleWatchList(localDataSet.get(position));
                                 Toast.makeText(app_context, watch_toast,
                                         Toast.LENGTH_LONG).show();
                                 break;
