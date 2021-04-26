@@ -38,13 +38,17 @@
                         android:id="@+id/youtube_player_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
-                        app:videoId="S0Q4gqBUs7c"
+                        app:enableAutomaticInitialization="true"
                         app:autoPlay="false"
                         app:showFullScreenButton="false" />
                 </LinearLayout>
 
             </FrameLayout>
+            <ImageView
+                android:id="@+id/d_backdrop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/item_title"
@@ -52,8 +56,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="32sp"
-                android:paddingHorizontal="10dp"
+                android:textSize="27sp"
+                android:paddingHorizontal="8dp"
                 android:background="@drawable/title_box"
                 android:radius="20dp">
 
@@ -65,30 +69,32 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
                 android:text="@string/overview_word"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:paddingHorizontal="10dp">
-            </TextView>
+                android:paddingHorizontal="8dp"
+                />
 
-            <TextView
+            <com.borjabravo.readmoretextview.ReadMoreTextView
                 android:id="@+id/overview_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:paddingHorizontal="10dp">
+                android:paddingHorizontal="8dp"
+                app:colorClickableText="@color/colorLight"
+                app:trimLength="168"
+                app:trimMode="trimModeLength"/>
 
-            </TextView>
             <TextView
                 android:id="@+id/genres_word"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
                 android:text="@string/genres_word"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginTop="8dp"
-                android:paddingHorizontal="10dp">
+                android:paddingHorizontal="8dp">
             </TextView>
 
             <TextView
@@ -97,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:paddingHorizontal="10dp">
+                android:paddingHorizontal="8dp">
 
             </TextView>
             <TextView
@@ -106,10 +112,10 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
                 android:text="@string/year_word"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginTop="8dp"
-                android:paddingHorizontal="10dp">
+                android:paddingHorizontal="8dp">
             </TextView>
 
             <TextView
@@ -118,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:paddingHorizontal="10dp">
+                android:paddingHorizontal="8dp">
 
             </TextView>
             <LinearLayout
@@ -154,10 +160,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginTop="8dp"
-                android:paddingHorizontal="10dp"
+                android:paddingHorizontal="8dp"
                 android:text="@string/cast_word"/>
             <LinearLayout
                 android:id="@+id/cast_row1"
@@ -331,10 +337,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginTop="8dp"
-                android:paddingHorizontal="10dp"
+                android:paddingHorizontal="8dp"
                 android:text="@string/review_word"/>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -348,10 +354,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"
-                android:paddingHorizontal="10dp"
+                android:paddingHorizontal="8dp"
                 android:text="@string/recommended_word"/>
 
             <androidx.recyclerview.widget.RecyclerView

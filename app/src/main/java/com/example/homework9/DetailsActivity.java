@@ -36,6 +36,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -52,13 +53,15 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     ReviewData review_data=null;
     ReviewAdapter rv_adapter= null;
     WatchHolder watch_holder=null;
-    String watch_key = null;
     int watch_state;
 
     //Recommended variables
     private RecommendedData rec_data;
     private RecyclerView rec_box;
     RecommendAdapter rec_adapter;
+
+    //Variable for youtube player
+    YouTubePlayerView youTubePlayerView;
 
     //Data type for home screen data
     class DetailsData {
@@ -74,6 +77,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         String vote_average;
         String tagline;
         String poster_path;
+        String backdrop_path;
         String video_key;
         String video_name;
     }
@@ -121,17 +125,9 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
 
 
         //Set lifecycle observer for youtube video
-        /**
-        YouTubePlayerView youTubePlayerView = findViewById(R.id.youtube_player_view);
-        getLifecycle().addObserver(youTubePlayerView);
-        YouTubePlayerView you_view = findViewById(R.id.youtube_player_view);
-        you_view.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
-            @Override
-            public void onReady(@NonNull YouTubePlayer youTubePlayer) {
-                initializeVideo(youTubePlayer);
-            }
-        });
-         **/
+
+        youTubePlayerView = findViewById(R.id.youtube_player_view);
+
 
         //Set up Watch Holder object to access watchlist in shared preferences
         watch_holder = new WatchHolder(DetailsActivity.this);
@@ -229,8 +225,13 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
 
     // A method to initialize the watchlist button and watch state
     public void initWatchButton(){
-        watch_key = media_type + "_" + s_id + "_" + poster_path;
-        Boolean isInWatch = watch_holder.isInWatchList(watch_key);
+        my_item = new HashMap<String, String>();
+        my_item.put("id", s_id);
+        my_item.put("media_type", media_type);
+        my_item.put("poster_path", poster_path);
+        my_item.put("title", title);
+
+        Boolean isInWatch = watch_holder.isInWatchList(my_item);
         if(isInWatch){
             ImageView watch_button = (ImageView) findViewById(R.id.watch_button);
             watch_button.setImageResource(R.drawable.ic_baseline_remove_circle_outline_24);
@@ -250,14 +251,14 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
             i_view.setImageResource(R.drawable.ic_baseline_remove_circle_outline_24);
             Toast.makeText(DetailsActivity.this, details_data.title + " was added to Watchlist",
                     Toast.LENGTH_LONG).show();
-            watch_holder.toggleWatchList(watch_key);
+            watch_holder.toggleWatchList(my_item);
             watch_state = 1;
         }
         else{
             i_view.setImageResource(R.drawable.ic_baseline_add_circle_outline_24);
             Toast.makeText(DetailsActivity.this, details_data.title + " was removed from Watchlist",
                     Toast.LENGTH_LONG).show();
-            watch_holder.toggleWatchList(watch_key);
+            watch_holder.toggleWatchList(my_item);
             watch_state = 0;
         }
     }
@@ -265,14 +266,14 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     //Methods for social media access
     public void postTwitter(){
         String my_url = "https://twitter.com/intent/tweet?text=" + Uri.encode("Check this out!") + " %0D%0A";
-        if(!"NOT AVAILABLE".equals(details_data.video_name)) {
+        if(details_data.video_name != null) {
             my_url += "&url=https://www.youtube.com/watch?v=" + Uri.encode(details_data.video_key) + " %0D%0A";
         }
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(my_url));
         startActivity(browserIntent);
     }
     public void postFacebook(){
-        if(!"NOT_AVAILABLE".equals(details_data.video_name)){
+        if(details_data.video_name != null ){
             String my_str = "https://www.facebook.com/sharer/sharer.php?u=";
             my_str += Uri.encode("https://www.youtube.com/watch?v=" + details_data.video_key);
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(my_str));
@@ -298,33 +299,26 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    protected void initializeVideo(YouTubePlayer player) {
-        RequestQueue queue = Volley.newRequestQueue(DetailsActivity.this);
-        String root_url = "http://10.0.2.2:8080/";
-        String details_url = root_url + "video/" + media_type + "/" + s_id;
+    protected void initializeVideo(String video_key) {
+        getLifecycle().addObserver(youTubePlayerView);
+        YouTubePlayerView you_view = findViewById(R.id.youtube_player_view);
+        ImageView backdrop_view = findViewById(R.id.d_backdrop);
+        if(details_data.video_name != null){
+            you_view.setVisibility(View.VISIBLE);
+            backdrop_view.setVisibility(View.GONE);
+            you_view.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+                @Override
+                public void onReady(@NonNull YouTubePlayer youTubePlayer) {
+                    youTubePlayer.cueVideo(video_key, 0);
+                }
+            });
+        }
+        else{
+            you_view.setVisibility(View.GONE);
+            backdrop_view.setVisibility(View.VISIBLE);
+            Glide.with(DetailsActivity.this).load(details_data.backdrop_path).into(backdrop_view);
+        }
 
-        // Request a string response from the provided URL.
-        StringRequest detailsRequest = new StringRequest(Request.Method.GET, details_url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Gson gson = new Gson();
-                        VideoData v_data = null;
-                        try {
-                            v_data = gson.fromJson(response, VideoData.class);
-                            Log.e("1",  v_data.video_key);
-                            player.cueVideo(v_data.video_key, 0);
-                        } catch (Exception error) {
-                            Log.e("GSON error", error.toString());
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Volley Error", "That didn't work!");
-            }
-        });
     }
 
 
@@ -341,19 +335,43 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         //Create home content
         // Set item video key
 
+        //Set youtube video
+        initializeVideo(details_data.video_key);
 
         // Set item title
         TextView title_view = findViewById(R.id.item_title);
         title_view.setText(details_data.title);
         // set item overview
         TextView overview_view = findViewById(R.id.overview_content);
-        overview_view.setText(details_data.overview);
+        TextView overview_word = findViewById(R.id.overview_word);
+        if(details_data.overview != null){
+            overview_view.setText(details_data.overview);
+        }
+        else{
+            overview_view.setVisibility(View.GONE);
+            overview_word.setVisibility(View.GONE);
+        }
         // Set item genres
         TextView genres_view = findViewById(R.id.genres_content);
-        genres_view.setText(details_data.genres);
+        TextView genres_word = findViewById(R.id.genres_word);
+        if(details_data.genres != null){
+            genres_view.setText(details_data.genres);
+        }
+        else{
+            genres_view.setVisibility(View.GONE);
+            genres_word.setVisibility(View.GONE);
+        }
+
         // set item year
         TextView year_view = findViewById(R.id.year_content);
-        year_view.setText(details_data.year);
+        TextView year_word = findViewById(R.id.year_word);
+        if(details_data.year != null){
+            year_view.setText(details_data.year);
+        }
+        else{
+            year_view.setVisibility(View.GONE);
+            year_word.setVisibility(View.GONE);
+        }
 
         findViewById(R.id.d_loading_screen).setVisibility(View.GONE);
         findViewById(R.id.d_content).setVisibility(View.VISIBLE);
