@@ -178,16 +178,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         startActivity(dIntent);
     }
 
-    // A method to switch to the details activity
-    public void switchDetails(){
-        String media_type = "movie";
-        String id = "587807";
-        Intent dIntent = new Intent(getActivity(), DetailsActivity.class);
-        dIntent.putExtra("media_type", media_type);
-        dIntent.putExtra("id", id);
-        startActivity(dIntent);
-    }
-
     public void toggleMovie(View view){
         if(cur_tab == 1){
             TextView m_button = getView().findViewById(R.id.movie_tab_button);

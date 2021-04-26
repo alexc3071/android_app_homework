@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".DetailsActivity">
 
+    <include
+        android:id="@+id/d_loading_screen"
+        layout="@layout/loading_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,6 +20,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:id="@+id/d_content"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -26,7 +34,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical" >
-                    <!--
                     <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
                         android:id="@+id/youtube_player_view"
                         android:layout_width="match_parent"
@@ -35,7 +42,6 @@
                         app:videoId="S0Q4gqBUs7c"
                         app:autoPlay="false"
                         app:showFullScreenButton="false" />
-                        -->
                 </LinearLayout>
 
             </FrameLayout>
@@ -335,7 +341,26 @@
                 android:id="@+id/review_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/recommended_word"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="10dp"
+                android:text="@string/recommended_word"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recommended_recycler"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
+
+
 
     </androidx.core.widget.NestedScrollView>
 

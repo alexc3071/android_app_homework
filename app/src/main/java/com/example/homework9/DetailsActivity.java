@@ -27,6 +27,8 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.homework9.ui.home.HomeFragment;
 import com.example.homework9.ui.home.HomeViewModel;
+import com.example.homework9.ui.search.SearchAdapter;
+import com.example.homework9.ui.search.SearchFragment;
 import com.google.gson.Gson;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
@@ -52,6 +54,51 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     WatchHolder watch_holder=null;
     String watch_key = null;
     int watch_state;
+
+    //Recommended variables
+    private RecommendedData rec_data;
+    private RecyclerView rec_box;
+    RecommendAdapter rec_adapter;
+
+    //Data type for home screen data
+    class DetailsData {
+        String id;
+        String media_type;
+        String title;
+        String genres;
+        String spoken_languages;
+        String year;
+        String release_date;
+        String runtime;
+        String overview;
+        String vote_average;
+        String tagline;
+        String poster_path;
+        String video_key;
+        String video_name;
+    }
+
+    //Data type for home screen data
+    class VideoData {
+        String video_name;
+        String video_key;
+    }
+
+    //Data type for cast
+    class CastData{
+        Map<String, String>[] data;
+    }
+
+    //Data type for review
+    class ReviewData{
+        ArrayList<Map<String, String>> data;
+    }
+
+    //Data type for recommended
+    class RecommendedData{
+        ArrayList<Map<String, String>> data;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +136,20 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         //Set up Watch Holder object to access watchlist in shared preferences
         watch_holder = new WatchHolder(DetailsActivity.this);
 
+        //Initialize card recycler views and associated items for reviews
+        init_review_recyclers();
+
+        //Initialize card recycler views and associated items for recommended
+        init_rec_recyclers();
+
+        //Initialize watchlist button
+        initWatchButton();
+
+        //Set the content for the layout
+        initializeDetails();
+    }
+
+    public void init_review_recyclers(){
         //Set recycler view adapter and manager
         // Lookup the recyclerview in activity layout
         RecyclerView review_box = (RecyclerView) findViewById(R.id.review_box);
@@ -108,12 +169,43 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         review_box.setAdapter(rv_adapter);
         // Set layout manager to position the items
         review_box.setLayoutManager(new LinearLayoutManager(this));
+    }
 
-        //Initialize watchlist button
-        initWatchButton();
+    // A method to switch to the details activity
+    public void switchDetails(Map<String, String> item){
+        String media_type = item.get("media_type");
+        String id = item.get("id");
+        String poster_path = item.get("poster_path");
+        String title = item.get("title");
+        Intent dIntent = new Intent(DetailsActivity.this, DetailsActivity.class);
+        dIntent.putExtra("media_type", media_type);
+        dIntent.putExtra("id", id);
+        dIntent.putExtra("poster_path", poster_path);
+        dIntent.putExtra("title", title);
+        startActivity(dIntent);
+    }
 
-        //Set the content for the layout
-        initializeDetails();
+    public void init_rec_recyclers(){
+        // Initialize data
+        rec_data = new RecommendedData();
+        rec_data.data = new ArrayList<Map<String, String>>();
+
+        //Set recycler view adapter and manager for search results
+        // Lookup the recyclerview in activity layout
+        rec_box = (RecyclerView) findViewById(R.id.recommended_recycler);
+        rec_box.setNestedScrollingEnabled(true);
+
+        // Create adapter passing in the empty data object
+        rec_adapter = new RecommendAdapter(rec_data.data, DetailsActivity.this, new RecommendAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Map<String, String> item) {
+                switchDetails(item);
+            }
+        });
+        // Attach the adapter to the recyclerview to populate items
+        rec_box.setAdapter(rec_adapter);
+        // Set layout manager to position the items
+        rec_box.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
     }
 
 
@@ -206,42 +298,6 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    //Data type for home screen data
-    class DetailsData {
-        String id;
-        String media_type;
-        String title;
-        String genres;
-        String spoken_languages;
-        String year;
-        String release_date;
-        String runtime;
-        String overview;
-        String vote_average;
-        String tagline;
-        String poster_path;
-        String video_key;
-        String video_name;
-    }
-
-    //Data type for home screen data
-    class VideoData {
-        String video_name;
-        String video_key;
-    }
-
-    //Data type for cast
-    class CastData{
-        Map<String, String>[] data;
-    }
-
-    //Data type for review
-    class ReviewData{
-        ArrayList<Map<String, String>> data;
-    }
-
-
-
     protected void initializeVideo(YouTubePlayer player) {
         RequestQueue queue = Volley.newRequestQueue(DetailsActivity.this);
         String root_url = "http://10.0.2.2:8080/";
@@ -299,6 +355,8 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         TextView year_view = findViewById(R.id.year_content);
         year_view.setText(details_data.year);
 
+        findViewById(R.id.d_loading_screen).setVisibility(View.GONE);
+        findViewById(R.id.d_content).setVisibility(View.VISIBLE);
     }
 
     protected void setCast(String response) {
@@ -354,7 +412,20 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         }
         Log.d("review_data size", String.valueOf(review_data.data.size()));
         rv_adapter.notifyDataSetChanged();
+    }
 
+    private void setRecommendations(String response){
+        //Parse response
+        Gson gson = new Gson();
+        try{
+            rec_data = gson.fromJson(response, RecommendedData.class);
+        } catch (Exception error){
+            Log.e("GSON error", error.toString());
+        }
+        if(rec_data.data.size() > 0){
+            findViewById(R.id.recommended_word).setVisibility(View.VISIBLE);
+        }
+        rec_adapter.updateItems(rec_data.data);
 
     }
 
@@ -364,7 +435,8 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         String details_url = root_url + "details/" + media_type + "/" + s_id;
         String cast_url = root_url + "cast/" +  media_type + "/" + s_id;
         String review_url = root_url + "reviews/" + media_type + "/" + s_id;
-        Log.d("what", review_url);
+        String rec_url = root_url + "recommended/" + media_type + "/" + s_id;
+        Log.d("url", rec_url);
 
         // Request a string response from the provided URL.
         StringRequest detailsRequest = new StringRequest(Request.Method.GET, details_url,
@@ -406,9 +478,24 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+        // Request a string response from the provided URL.
+        StringRequest recRequest = new StringRequest(Request.Method.GET, rec_url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        setRecommendations(response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley Error", "That didn't work!");
+            }
+        });
+
         queue.add(detailsRequest);
         queue.add(castRequest);
         queue.add(reviewRequest);
+        queue.add(recRequest);
     }
 
 }
