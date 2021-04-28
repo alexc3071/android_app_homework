@@ -33,10 +33,10 @@ public class ReviewActivity extends AppCompatActivity {
         if(raw_date != null){
             String[] split_date = raw_date.split("-");
             Log.d("year", split_date[0]);
-            Date s_raw_date = new Date(Integer.valueOf(split_date[0]) - 1900, Integer.valueOf(split_date[1]), Integer.valueOf(split_date[2]));
+            Date s_raw_date = new Date(Integer.valueOf(split_date[0]) - 1900, Integer.valueOf(split_date[1]) - 1, Integer.valueOf(split_date[2]));
             DateFormat df = new SimpleDateFormat("E, MMM dd yyyy");
             String my_date = df.format(s_raw_date);
-            first_line += " " +  my_date;
+            first_line += " on " +  my_date;
         }
         TextView first_view = (TextView) findViewById(R.id.r_first_line);
         first_view.setText(first_line);

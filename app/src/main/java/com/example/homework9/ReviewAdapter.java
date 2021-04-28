@@ -91,7 +91,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         String raw_date =  localDataSet.get(position).get("date");
         if(raw_date != null){
             String[] split_date = raw_date.split("-");
-            Date s_raw_date = new Date(Integer.valueOf(split_date[0]) - 1900, Integer.valueOf(split_date[1]), Integer.valueOf(split_date[2]));
+            Date s_raw_date = new Date(Integer.valueOf(split_date[0]) - 1900, Integer.valueOf(split_date[1])-1, Integer.valueOf(split_date[2]));
             DateFormat df = new SimpleDateFormat("E, MMM dd yyyy");
             String my_date = df.format(s_raw_date);
             first_line += " on " +  my_date;

@@ -127,10 +127,11 @@ public class SearchFragment extends Fragment {
 
     private void handle_query(String query_text){
         // If length of text is greater than 0, then we send query to backend
-        if(query_text.length() > 0){
+        String trimmed_text = query_text.trim();
+        if(trimmed_text.length() > 0){
             RequestQueue queue = Volley.newRequestQueue(getContext());
-            String url ="http://10.0.2.2:8080/multisearch/";
-            url += Uri.encode(query_text);
+            String url ="https://homework9backend.wl.r.appspot.com/multisearch/";
+            url += Uri.encode(trimmed_text);
 
             // Request a string response from the provided URL.
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,

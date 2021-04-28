@@ -47,6 +47,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     String s_id;
     String poster_path;
     String title;
+    String item_tmdb_url;
     Map<String, String> my_item;
     DetailsData details_data=null;
     CastData cast_data=null;
@@ -266,16 +267,14 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     //Methods for social media access
     public void postTwitter(){
         String my_url = "https://twitter.com/intent/tweet?text=" + Uri.encode("Check this out!") + " %0D%0A";
-        if(details_data.video_name != null) {
-            my_url += "&url=https://www.youtube.com/watch?v=" + Uri.encode(details_data.video_key) + " %0D%0A";
-        }
+        my_url += Uri.encode(item_tmdb_url);
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(my_url));
         startActivity(browserIntent);
     }
     public void postFacebook(){
         if(details_data.video_name != null ){
             String my_str = "https://www.facebook.com/sharer/sharer.php?u=";
-            my_str += Uri.encode("https://www.youtube.com/watch?v=" + details_data.video_key);
+            my_str += Uri.encode(item_tmdb_url);
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(my_str));
             startActivity(browserIntent);
         }
@@ -333,7 +332,8 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         //Create home content
-        // Set item video key
+        // Set tmdb url to be shared on social media
+        item_tmdb_url = "https://www.themoviedb.org/" + media_type + "/" + s_id;
 
         //Set youtube video
         initializeVideo(details_data.video_key);
@@ -373,8 +373,6 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
             year_word.setVisibility(View.GONE);
         }
 
-        findViewById(R.id.d_loading_screen).setVisibility(View.GONE);
-        findViewById(R.id.d_content).setVisibility(View.VISIBLE);
     }
 
     protected void setCast(String response) {
@@ -410,6 +408,8 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
                         .into(image_view);
             }
         }
+        findViewById(R.id.d_loading_screen).setVisibility(View.GONE);
+        findViewById(R.id.d_content).setVisibility(View.VISIBLE);
     }
 
     protected void setReviews(String response){
@@ -428,7 +428,6 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         if(review_data.data.size() == 0){
             findViewById(R.id.review_word).setVisibility(View.GONE);
         }
-        Log.d("review_data size", String.valueOf(review_data.data.size()));
         rv_adapter.notifyDataSetChanged();
     }
 
@@ -449,12 +448,11 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
 
     protected void initializeDetails() {
         RequestQueue queue = Volley.newRequestQueue(DetailsActivity.this);
-        String root_url = "http://10.0.2.2:8080/";
+        String root_url = "https://homework9backend.wl.r.appspot.com/";
         String details_url = root_url + "details/" + media_type + "/" + s_id;
         String cast_url = root_url + "cast/" +  media_type + "/" + s_id;
         String review_url = root_url + "reviews/" + media_type + "/" + s_id;
         String rec_url = root_url + "recommended/" + media_type + "/" + s_id;
-        Log.d("url", rec_url);
 
         // Request a string response from the provided URL.
         StringRequest detailsRequest = new StringRequest(Request.Method.GET, details_url,
