@@ -96,7 +96,7 @@ public class SearchFragment extends Fragment {
         String media_type = item.get("media_type");
         String id = item.get("id");
         String poster_path = item.get("poster_path");
-        String title = item.get("title");
+        String title = item.get("name");
         Intent dIntent = new Intent(getActivity(), DetailsActivity.class);
         dIntent.putExtra("media_type", media_type);
         dIntent.putExtra("id", id);

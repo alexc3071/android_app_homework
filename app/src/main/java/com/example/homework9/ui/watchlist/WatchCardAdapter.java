@@ -149,7 +149,7 @@ public class WatchCardAdapter extends RecyclerView.Adapter<WatchCardAdapter.View
                 watch_holder.toggleWatchList(watch_key);
 
                 //Display toast
-                String watch_toast = localDataSet.get(position).get("title") +  " was removed from favorites";
+                String watch_toast = localDataSet.get(position).get("title") +  " was removed from watchlist";
                 Toast.makeText(app_context, watch_toast, Toast.LENGTH_LONG).show();
                 localDataSet.remove(position);
                 // Remove item from data arraylist in adapter
