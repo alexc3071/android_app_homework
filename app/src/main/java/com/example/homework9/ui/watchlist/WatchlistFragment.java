@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -39,12 +40,12 @@ public class WatchlistFragment extends Fragment {
     WatchCardAdapter w_adapter;
 
     //Data types
-    class WatchData{
+    class WatchData {
         ArrayList<Map<String, String>> data;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
+                             ViewGroup container, Bundle savedInstanceState) {
         watchlistViewModel =
                 new ViewModelProvider(this).get(WatchlistViewModel.class);
         View root = inflater.inflate(R.layout.fragment_watchlist, container, false);
@@ -56,13 +57,11 @@ public class WatchlistFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //Initialize card recycler views and associated items
         init_recyclers(view);
-
-        //Initialize watchlist content
-        init_watch_content();
     }
 
+
     //Set up simple callback
-    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP |
+            ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP |
             ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT | ItemTouchHelper.START | ItemTouchHelper.END, 0) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -81,7 +80,14 @@ public class WatchlistFragment extends Fragment {
         }
     };
 
-    private void init_recyclers(View view){
+    @Override
+    public void onResume(){
+        super.onResume();
+        //Initialize watchlist content
+        init_watch_content();
+    }
+
+    private void init_recyclers(View view) {
         // Initialize data
         watch_data = new WatchData();
         watch_data.data = new ArrayList<Map<String, String>>();
@@ -101,14 +107,13 @@ public class WatchlistFragment extends Fragment {
                 new WatchCardAdapter.OnNumClickListener() {
                     @Override
                     public void onItemClick(int num) {
-                        if(num == 0){
+                        if (num == 0) {
                             view.findViewById(R.id.w_empty_message).setVisibility(View.VISIBLE);
-                        }
-                        else{
+                        } else {
                             view.findViewById(R.id.w_empty_message).setVisibility(View.GONE);
                         }
                     }
-                } );
+                });
         // Attach the adapter to the recyclerview to populate items
         watch_box.setAdapter(w_adapter);
         // Set layout manager to position the items
@@ -117,10 +122,11 @@ public class WatchlistFragment extends Fragment {
         // Set up item touch helper for drag and drop feature
         itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(watch_box);
+
     }
 
     // A method to switch to the details activity
-    public void switchDetails(Map<String, String> item){
+    public void switchDetails(Map<String, String> item) {
         String media_type = item.get("media_type");
         String id = item.get("id");
         String poster_path = item.get("poster_path");
@@ -134,7 +140,7 @@ public class WatchlistFragment extends Fragment {
     }
 
 
-    private void init_watch_content(){
+    private void init_watch_content() {
         watch_holder = new WatchHolder(getContext());
         w_adapter.updateItems(watch_holder.getCurrentWatchlist());
     }

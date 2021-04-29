@@ -41,7 +41,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DetailsActivity extends AppCompatActivity implements View.OnClickListener{
+public class DetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     String media_type;
     String s_id;
@@ -49,11 +49,11 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     String title;
     String item_tmdb_url;
     Map<String, String> my_item;
-    DetailsData details_data=null;
-    CastData cast_data=null;
-    ReviewData review_data=null;
-    ReviewAdapter rv_adapter= null;
-    WatchHolder watch_holder=null;
+    DetailsData details_data = null;
+    CastData cast_data = null;
+    ReviewData review_data = null;
+    ReviewAdapter rv_adapter = null;
+    WatchHolder watch_holder = null;
     int watch_state;
 
     //Recommended variables
@@ -90,17 +90,17 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     //Data type for cast
-    class CastData{
+    class CastData {
         Map<String, String>[] data;
     }
 
     //Data type for review
-    class ReviewData{
+    class ReviewData {
         ArrayList<Map<String, String>> data;
     }
 
     //Data type for recommended
-    class RecommendedData{
+    class RecommendedData {
         ArrayList<Map<String, String>> data;
     }
 
@@ -146,7 +146,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         initializeDetails();
     }
 
-    public void init_review_recyclers(){
+    public void init_review_recyclers() {
         //Set recycler view adapter and manager
         // Lookup the recyclerview in activity layout
         RecyclerView review_box = (RecyclerView) findViewById(R.id.review_box);
@@ -169,7 +169,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     // A method to switch to the details activity
-    public void switchDetails(Map<String, String> item){
+    public void switchDetails(Map<String, String> item) {
         String media_type = item.get("media_type");
         String id = item.get("id");
         String poster_path = item.get("poster_path");
@@ -182,7 +182,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         startActivity(dIntent);
     }
 
-    public void init_rec_recyclers(){
+    public void init_rec_recyclers() {
         // Initialize data
         rec_data = new RecommendedData();
         rec_data.data = new ArrayList<Map<String, String>>();
@@ -207,16 +207,16 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
 
 
     // A method to switch to the details activity
-    public void switchReview(Map<String, String> item){
+    public void switchReview(Map<String, String> item) {
         Intent dIntent = new Intent(DetailsActivity.this, ReviewActivity.class);
         dIntent.putExtra("author", item.get("author"));
-        if(item.get("content")!= null){
+        if (item.get("content") != null) {
             dIntent.putExtra("content", item.get("content"));
         }
-        if(item.get("date")!= null){
+        if (item.get("date") != null) {
             dIntent.putExtra("date", item.get("date"));
         }
-        if(item.get("rating")!= null){
+        if (item.get("rating") != null) {
             dIntent.putExtra("rating", item.get("rating"));
         }
 
@@ -225,7 +225,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     // A method to initialize the watchlist button and watch state
-    public void initWatchButton(){
+    public void initWatchButton() {
         my_item = new HashMap<String, String>();
         my_item.put("id", s_id);
         my_item.put("media_type", media_type);
@@ -233,12 +233,11 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         my_item.put("title", title);
 
         Boolean isInWatch = watch_holder.isInWatchList(my_item);
-        if(isInWatch){
+        if (isInWatch) {
             ImageView watch_button = (ImageView) findViewById(R.id.watch_button);
             watch_button.setImageResource(R.drawable.ic_baseline_remove_circle_outline_24);
             watch_state = 1;
-        }
-        else{
+        } else {
             ImageView watch_button = (ImageView) findViewById(R.id.watch_button);
             watch_button.setImageResource(R.drawable.ic_baseline_add_circle_outline_24);
             watch_state = 0;
@@ -246,16 +245,15 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     // Methods for watchlist control
-    public void toggleWatch(View view){
+    public void toggleWatch(View view) {
         ImageView i_view = (ImageView) view;
-        if(watch_state == 0){
+        if (watch_state == 0) {
             i_view.setImageResource(R.drawable.ic_baseline_remove_circle_outline_24);
             Toast.makeText(DetailsActivity.this, details_data.title + " was added to Watchlist",
                     Toast.LENGTH_LONG).show();
             watch_holder.toggleWatchList(my_item);
             watch_state = 1;
-        }
-        else{
+        } else {
             i_view.setImageResource(R.drawable.ic_baseline_add_circle_outline_24);
             Toast.makeText(DetailsActivity.this, details_data.title + " was removed from Watchlist",
                     Toast.LENGTH_LONG).show();
@@ -265,19 +263,18 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     //Methods for social media access
-    public void postTwitter(){
+    public void postTwitter() {
         String my_url = "https://twitter.com/intent/tweet?text=" + Uri.encode("Check this out!") + " %0D%0A";
         my_url += Uri.encode(item_tmdb_url);
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(my_url));
         startActivity(browserIntent);
     }
-    public void postFacebook(){
-        if(details_data.video_name != null ){
-            String my_str = "https://www.facebook.com/sharer/sharer.php?u=";
-            my_str += Uri.encode(item_tmdb_url);
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(my_str));
-            startActivity(browserIntent);
-        }
+
+    public void postFacebook() {
+        String my_str = "https://www.facebook.com/sharer/sharer.php?u=";
+        my_str += Uri.encode(item_tmdb_url);
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(my_str));
+        startActivity(browserIntent);
     }
 
     @Override
@@ -302,7 +299,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         getLifecycle().addObserver(youTubePlayerView);
         YouTubePlayerView you_view = findViewById(R.id.youtube_player_view);
         ImageView backdrop_view = findViewById(R.id.d_backdrop);
-        if(details_data.video_name != null){
+        if (details_data.video_name != null) {
             you_view.setVisibility(View.VISIBLE);
             backdrop_view.setVisibility(View.GONE);
             you_view.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
@@ -311,8 +308,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
                     youTubePlayer.cueVideo(video_key, 0);
                 }
             });
-        }
-        else{
+        } else {
             you_view.setVisibility(View.GONE);
             backdrop_view.setVisibility(View.VISIBLE);
             Glide.with(DetailsActivity.this).load(details_data.backdrop_path).into(backdrop_view);
@@ -344,20 +340,18 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         // set item overview
         TextView overview_view = findViewById(R.id.overview_content);
         TextView overview_word = findViewById(R.id.overview_word);
-        if(details_data.overview != null){
+        if (details_data.overview != null) {
             overview_view.setText(details_data.overview);
-        }
-        else{
+        } else {
             overview_view.setVisibility(View.GONE);
             overview_word.setVisibility(View.GONE);
         }
         // Set item genres
         TextView genres_view = findViewById(R.id.genres_content);
         TextView genres_word = findViewById(R.id.genres_word);
-        if(details_data.genres != null){
+        if (details_data.genres != null) {
             genres_view.setText(details_data.genres);
-        }
-        else{
+        } else {
             genres_view.setVisibility(View.GONE);
             genres_word.setVisibility(View.GONE);
         }
@@ -365,13 +359,15 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         // set item year
         TextView year_view = findViewById(R.id.year_content);
         TextView year_word = findViewById(R.id.year_word);
-        if(details_data.year != null){
+        if (details_data.year != null) {
             year_view.setText(details_data.year);
-        }
-        else{
+        } else {
             year_view.setVisibility(View.GONE);
             year_word.setVisibility(View.GONE);
         }
+
+        findViewById(R.id.d_loading_screen).setVisibility(View.GONE);
+        findViewById(R.id.d_content).setVisibility(View.VISIBLE);
 
     }
 
@@ -385,22 +381,22 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
             Log.e("GSON error", error.toString());
         }
 
-        if(cast_data.data != null){
-            if(cast_data.data.length > 0){
+        if (cast_data.data != null) {
+            if (cast_data.data.length > 0) {
                 findViewById(R.id.cast_row1).setVisibility(View.VISIBLE);
                 findViewById(R.id.cast_word).setVisibility(View.VISIBLE);
             }
-            if(cast_data.data.length > 3){
+            if (cast_data.data.length > 3) {
                 findViewById(R.id.cast_row2).setVisibility(View.VISIBLE);
             }
-            for(int i = 0; i < cast_data.data.length; i++){
+            for (int i = 0; i < cast_data.data.length; i++) {
 
-                int cast_box_id= getResources().getIdentifier("cast_box" + (i+1), "id", getPackageName());
+                int cast_box_id = getResources().getIdentifier("cast_box" + (i + 1), "id", getPackageName());
                 findViewById(cast_box_id).setVisibility(View.VISIBLE);
-                int cast_name_id= getResources().getIdentifier("cast_name" + (i+1), "id", getPackageName());
+                int cast_name_id = getResources().getIdentifier("cast_name" + (i + 1), "id", getPackageName());
                 TextView cast_name = (TextView) findViewById(cast_name_id);
                 cast_name.setText(cast_data.data[i].get("name"));
-                int prof_image_id= getResources().getIdentifier("profile_image" + (i+1), "id", getPackageName());
+                int prof_image_id = getResources().getIdentifier("profile_image" + (i + 1), "id", getPackageName());
                 CircleImageView image_view = (CircleImageView) findViewById(prof_image_id);
                 Glide.with(DetailsActivity.this)
                         .load(cast_data.data[i].get("profile_path"))
@@ -408,11 +404,9 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
                         .into(image_view);
             }
         }
-        findViewById(R.id.d_loading_screen).setVisibility(View.GONE);
-        findViewById(R.id.d_content).setVisibility(View.VISIBLE);
     }
 
-    protected void setReviews(String response){
+    protected void setReviews(String response) {
         //Parse response
         ReviewData my_data = null;
         Gson gson = new Gson();
@@ -422,24 +416,24 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
             Log.e("GSON error", error.toString());
         }
 
-        for(int i = 0; i < my_data.data.size(); i++){
+        for (int i = 0; i < my_data.data.size(); i++) {
             review_data.data.add(my_data.data.get(i));
         }
-        if(review_data.data.size() == 0){
+        if (review_data.data.size() == 0) {
             findViewById(R.id.review_word).setVisibility(View.GONE);
         }
         rv_adapter.notifyDataSetChanged();
     }
 
-    private void setRecommendations(String response){
+    private void setRecommendations(String response) {
         //Parse response
         Gson gson = new Gson();
-        try{
+        try {
             rec_data = gson.fromJson(response, RecommendedData.class);
-        } catch (Exception error){
+        } catch (Exception error) {
             Log.e("GSON error", error.toString());
         }
-        if(rec_data.data.size() > 0){
+        if (rec_data.data.size() > 0) {
             findViewById(R.id.recommended_word).setVisibility(View.VISIBLE);
         }
         rec_adapter.updateItems(rec_data.data);
@@ -450,7 +444,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         RequestQueue queue = Volley.newRequestQueue(DetailsActivity.this);
         String root_url = "https://homework9backend.wl.r.appspot.com/";
         String details_url = root_url + "details/" + media_type + "/" + s_id;
-        String cast_url = root_url + "cast/" +  media_type + "/" + s_id;
+        String cast_url = root_url + "cast/" + media_type + "/" + s_id;
         String review_url = root_url + "reviews/" + media_type + "/" + s_id;
         String rec_url = root_url + "recommended/" + media_type + "/" + s_id;
 

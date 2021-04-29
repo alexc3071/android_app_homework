@@ -54,22 +54,25 @@
                 android:id="@+id/item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textSize="27sp"
-                android:paddingHorizontal="8dp"
                 android:background="@drawable/title_box"
-                android:radius="20dp">
+                android:fontFamily="sans-serif-condensed"
+                android:paddingHorizontal="8dp"
+                android:radius="20dp"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold">
 
             </TextView>
 
             <TextView
                 android:id="@+id/overview_word"
+                android:fontFamily="sans-serif-condensed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
                 android:text="@string/overview_word"
-                android:textSize="20sp"
+                android:layout_marginTop="8dp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:paddingHorizontal="8dp"
                 />
@@ -87,11 +90,12 @@
 
             <TextView
                 android:id="@+id/genres_word"
+                android:fontFamily="sans-serif-condensed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
                 android:text="@string/genres_word"
-                android:textSize="20sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:layout_marginTop="8dp"
                 android:paddingHorizontal="8dp">
@@ -108,11 +112,12 @@
             </TextView>
             <TextView
                 android:id="@+id/year_word"
+                android:fontFamily="sans-serif-condensed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
                 android:text="@string/year_word"
-                android:textSize="20sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:layout_marginTop="8dp"
                 android:paddingHorizontal="8dp">
@@ -156,11 +161,12 @@
             </LinearLayout>
             <TextView
                 android:id="@+id/cast_word"
+                android:fontFamily="sans-serif-condensed"
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:layout_marginTop="8dp"
                 android:paddingHorizontal="8dp"
@@ -334,10 +340,11 @@
             </LinearLayout>
             <TextView
                 android:id="@+id/review_word"
+                android:fontFamily="sans-serif-condensed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:layout_marginTop="8dp"
                 android:paddingHorizontal="8dp"
@@ -350,11 +357,12 @@
 
             <TextView
                 android:id="@+id/recommended_word"
+                android:fontFamily="sans-serif-condensed"
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"
                 android:paddingHorizontal="8dp"

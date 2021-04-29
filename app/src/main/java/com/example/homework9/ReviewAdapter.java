@@ -87,7 +87,13 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
         // Get element from your dataset at this position and replace the
         // Set text for first line
-        String first_line = "by " + localDataSet.get(position).get("author");
+        String first_line = "by " ;
+        if(localDataSet.get(position).get("author")!= null){
+            first_line += localDataSet.get(position).get("author");
+        }
+        else{
+            first_line += "anonymous user";
+        }
         String raw_date =  localDataSet.get(position).get("date");
         if(raw_date != null){
             String[] split_date = raw_date.split("-");

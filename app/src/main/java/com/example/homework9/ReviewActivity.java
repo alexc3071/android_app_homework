@@ -29,7 +29,13 @@ public class ReviewActivity extends AppCompatActivity {
         raw_date = getIntent().getStringExtra("date");
         rating = getIntent().getStringExtra("rating");
 
-        String first_line = "by " + author;
+        String first_line = "by ";
+        if(author!= null){
+            first_line += author;
+        }
+        else{
+            first_line += "anonymous user";
+        }
         if(raw_date != null){
             String[] split_date = raw_date.split("-");
             Log.d("year", split_date[0]);
