@@ -8,4 +8,4 @@ This project is an assignment for a web technologies class. In this assignment I
   * Saving, editing, and displaying favorited media items
   * etc.
 
-The backend of the app, which is located in a different repository, was developed using NodeJS and Express. The backend server was temporarily hosted on an Amazon Web Server for the duration of the app runtime.
+The backend of the app, which is located in a different repository, was developed using NodeJS and Express. The backend server was temporarily hosted on a Google Cloud server for the duration of the app runtime.
